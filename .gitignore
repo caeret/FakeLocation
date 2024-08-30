@@ -1,2 +1,3 @@
 .DS_Store
 command_output_*.txt
+.venv

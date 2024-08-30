@@ -6,6 +6,9 @@ random_suffix=$(date +%s%N | shasum -a 256 | head -c 10)
 # 构建新的输出文件名
 new_output_file="command_output_${random_suffix}.txt"
 
+source ./.venv/bin/activate
+
+trap 'echo deactivate; deactivate' EXIT
 
 # 定义要查找的命令
 # target_command="sudo python3 -u -m pymobiledevice3 remote start-quic-tunnel"
@@ -57,16 +60,16 @@ echo "RSD Address: $rsd_address"
 echo "RSD Port: $rsd_port"
 
 # 挂载Developer Disk Image
-sudo pymobiledevice3 mounter auto-mount
+sudo python3 -u -m pymobiledevice3 mounter auto-mount
 
 # 修改虚拟位置
-latitude="$1"
-longitude="$2"
+latitude="$2"
+longitude="$1"
 echo "Latitude: $latitude"
 echo "Longitude: $longitude"
 
 # 使用RSD Address和RSD Port设置虚拟位置
-pymobiledevice3 developer dvt simulate-location set --rsd "$rsd_address" "$rsd_port" -- "$latitude" "$longitude"
+python3 -u -m pymobiledevice3 developer dvt simulate-location set --rsd "$rsd_address" "$rsd_port" -- "$latitude" "$longitude"
 
 # 结束后台命令
 kill "$command_pid"
